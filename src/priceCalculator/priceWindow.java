@@ -1,67 +1,92 @@
 package priceCalculator;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
 public class priceWindow extends JFrame {
 	JPanel mainPanel, listPanel;
-	ArrayList<JPanel> panelList = new ArrayList<>();
-	JLabel titleLabel, subLabel;
+	JLabel subLabel;
+	JScrollPane scrollPane;
 	GridBagConstraints gbc;
 	
 	public priceWindow() {
-		int i;
-
+		setTitle("시세표");
+		
 		mainPanel = new JPanel();
-		titleLabel = new JLabel();
 		subLabel = new JLabel();
 		listPanel = new JPanel();
 		
-		mainPanel.setLayout(null);
+		// 메인 패널
+		mainPanel.setLayout(new BorderLayout(0, 10));
 		mainPanel.setSize(800, 800);
-		mainPanel.setBackground(Color.RED);
 		
-		titleLabel.setText("시세표");
-		titleLabel.setHorizontalAlignment(JLabel.CENTER);
-		titleLabel.setFont(SystemManager.titleTTF);
-		titleLabel.setBounds(0, 0, 800, 50);
-		
+		// 부가 설명
 		subLabel.setText("TAB키를 사용하여 오른쪽 칸으로 넘어갈 수 있습니다.");
 		subLabel.setHorizontalAlignment(JLabel.CENTER);
+		subLabel.setVerticalAlignment(JLabel.BOTTOM);
 		subLabel.setFont(SystemManager.smallTTF);
-		subLabel.setBounds(0, 50, 800, 50);
+		subLabel.setPreferredSize(new Dimension(800, 50));
 
+		// 리스트 패널
 		listPanel.setLayout(new GridBagLayout());
-		listPanel.setBounds(0, 100, 800, 700);
+//		listPanel.setSize(800, 70);
+		// 스크롤 패널
+//		scrollPane = new JScrollPane(listPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//		scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+//		scrollPane.setBounds(0, 100, 800, 650);
 		
 		gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.NONE;
-		gbc.weightx = 1.0;
-		gbc.weighty = 1.0;
-		// 5 / 790
+//		gbc.anchor = GridBagConstraints.CENTER;
+		
+		// 리스트 요소 추가
+		// 일반 농작물
+		makePriceList(PriceList.cropsName, 0);
+		// 숙련도 농작물
+		makePriceList(PriceList.pCropsName, 1);
+		// 일반 물고기
+		makePriceList(PriceList.fishName, 3);
+		// 숙련도 물고기
+		makePriceList(PriceList.pFishName, 5);
+		
+		mainPanel.add(subLabel, BorderLayout.NORTH);
+		mainPanel.add(listPanel, BorderLayout.CENTER);
+//		mainPanel.add(scrollPane);
+		add(mainPanel);
+		
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocation(100, 100);
+		setResizable(false);		
+		setSize(800, 800);
+		setVisible(true);
+	}
+	
+	public void makePriceList(String[] name, int col) {
 		LineBorder lb = new LineBorder(Color.black, 1, true);
-		int col = 10;
-		for(i=0;i<PriceList.cropsName.length;i++) {
+		for(int i=0;i<name.length;i++) {
+			System.out.println(i);
 			JPanel panel = new JPanel();
 			panel.setLayout(null);
-			panel.setBorder(lb);
-			panel.setSize(79, 100);
+			panel.setPreferredSize(new Dimension(78, 100));
 			
 			JLabel label = new JLabel();
-			label.setText(PriceList.cropsName[i]);
+			label.setText(name[i]);
+			label.setHorizontalAlignment(JLabel.CENTER);
 			label.setFont(SystemManager.smallTTF);
-			label.setBounds(0, 0, 79, 30);
+			label.setBounds(0, 0, 78, 30);
 			
 			JTextField textField = new JTextField();
 			textField.addKeyListener(new KeyAdapter() {
@@ -73,26 +98,27 @@ public class priceWindow extends JFrame {
 					}
 				}
 			});
-			textField.setBounds(0, 30, 79, 70);
+			textField.setHorizontalAlignment(JTextField.CENTER);
+			textField.setBounds(0, 30, 78, 70);
+			
+			if(i==(name.length-1) || i == 9) {
+				panel.setBorder(new MatteBorder(1, 1, 1, 2, Color.BLACK));
+				label.setBorder(new MatteBorder(1, 1, 1, 2, Color.BLACK));
+				textField.setBorder(new MatteBorder(1, 1, 1, 2, Color.BLACK));
+			}
+			else {
+				panel.setBorder(lb);
+				label.setBorder(lb);
+				textField.setBorder(lb);
+			}
 			
 			panel.add(label);
 			panel.add(textField);
-			InsertComponent(listPanel, panel, i, 0, 1, 1);
+			InsertComponent(listPanel, panel, (i % 10), (col + (i / 10)), 1, 1);
 		}
-		
-		mainPanel.add(titleLabel);
-		mainPanel.add(subLabel);
-		mainPanel.add(listPanel);
-		add(mainPanel);
-		
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLocation(100, 100);
-		setResizable(false);		
-		setSize(800, 800);
-		setVisible(true);
 	}
 	
-	public void InsertComponent(JPanel panel, Component c, int x, int y, int w, int h) {
+	public void InsertComponent(JPanel panel, JPanel c, int x, int y, int w, int h) {
 		gbc.gridx = x;
 		gbc.gridy = y;
 		gbc.gridwidth = w;
