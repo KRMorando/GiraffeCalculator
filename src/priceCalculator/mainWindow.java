@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,14 +22,8 @@ public class mainWindow extends JFrame {
 	JButton cookBtn, minerBtn, farmerBtn, priceBtn;
 	GridBagConstraints gbc;
 	
-	private final String folderPath = "C:/GiraffeCalculator";
-	private final String pricePath = folderPath + "/시세.txt";
-	private File folder = new File(folderPath);
-	
 	mainWindow() {
-		// 폴더가 존재하지 않을시 폴더 생성
-        if(!folder.exists())
-        	folder.mkdir();
+        InfoList infoList = InfoList.getInstance();
         
         gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
@@ -41,29 +36,29 @@ public class mainWindow extends JFrame {
 		mainPanel.setLayout(new GridBagLayout());
 		mainPanel.setSize(400, 200);
 		
-		cookBtn = makeBtn("요리사", 180, 150);
-//		cookBtn.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				new MissionWindow();
-//				dispose();
-//			}
-//		});
+		cookBtn = makeBtn("요리", 180, 150);
+		cookBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new cookWindow();
+				dispose();
+			}
+		});
 		
 		minerBtn = makeBtn("광부", 180, 150);
 //		minerBtn.addActionListener(new ActionListener() {
 //			@Override
 //			public void actionPerformed(ActionEvent e) {
-//				new MissionWindow();
+//				new minerWindow();
 //				dispose();
 //			}
 //		});
 		
-		farmerBtn = makeBtn("농부", 180, 150);
+		farmerBtn = makeBtn("무역", 180, 150);
 //		farmerBtn.addActionListener(new ActionListener() {
 //			@Override
 //			public void actionPerformed(ActionEvent e) {
-//				new MissionWindow();
+//				new farmerWindow();
 //				dispose();
 //			}
 //		});
