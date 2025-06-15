@@ -46,7 +46,7 @@ public class cookWindow extends JFrame {
 	JTextField cook_levelTextField;
 	JTextArea priceTextArea;
 	
-	JScrollPane scrollPane, priceScrollPane;
+	JScrollPane scrollPane, priceScrollPane, priceListScrollPane;
 	GridBagConstraints lgbc, sgbc;
 	
 	LineBorder lb = new LineBorder(Color.black, 1, true);
@@ -413,18 +413,23 @@ public class cookWindow extends JFrame {
 		priceTextArea.setBorder(new LineBorder(Color.BLACK, 1));
 		priceTextArea.setOpaque(false);
 		priceTextArea.setFont(SystemManager.smallTTF);
-		priceTextArea.setPreferredSize(new Dimension(780, 110));
+		priceTextArea.setPreferredSize(new Dimension(780, 1600));
+		// 스크롤 패널
+		priceScrollPane = new JScrollPane(priceTextArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//		priceScrollPane.setBorder(new LineBorder(Color.WHITE, 1));
+		priceScrollPane.getVerticalScrollBar().setUnitIncrement(5);
+		priceScrollPane.setPreferredSize(new Dimension(800, 110));
 		
 		// 리스트 패널
 		priceListPanel = new JPanel();
 		priceListPanel.setLayout(new GridBagLayout());
 		priceListPanel.setOpaque(false);
-		priceListPanel.setPreferredSize(new Dimension(770, 620));
+		priceListPanel.setPreferredSize(new Dimension(780, 620));
 		// 스크롤 패널
-		priceScrollPane = new JScrollPane(priceListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//		priceScrollPane.setBorder(new LineBorder(Color.WHITE, 1));
-		priceScrollPane.getVerticalScrollBar().setUnitIncrement(5);
-		priceScrollPane.setPreferredSize(new Dimension(800, 570));
+		priceListScrollPane = new JScrollPane(priceListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//		priceListScrollPane.setBorder(new LineBorder(Color.WHITE, 1));
+		priceListScrollPane.getVerticalScrollBar().setUnitIncrement(5);
+		priceListScrollPane.setPreferredSize(new Dimension(800, 570));
 		
 		/* ====================================================	*/
 		/* ==================== 오른쪽 끝 =======================	*/
@@ -535,10 +540,10 @@ public class cookWindow extends JFrame {
 		
 		// 오른쪽 패널에 컴포넌트 추가
 		pricePanel.add(priceLabel, BorderLayout.NORTH);
-		pricePanel.add(priceTextArea, BorderLayout.CENTER);
+		pricePanel.add(priceScrollPane, BorderLayout.CENTER);
 		
 		mainRightPanel.add(pricePanel, BorderLayout.NORTH);
-		mainRightPanel.add(priceScrollPane, BorderLayout.CENTER);
+		mainRightPanel.add(priceListScrollPane, BorderLayout.CENTER);
 		
 		bottomPanel.add(saveBtn);
 		bottomPanel.add(applyBtn);

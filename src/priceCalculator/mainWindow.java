@@ -3,6 +3,7 @@ package priceCalculator;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
@@ -13,13 +14,14 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 
 public class mainWindow extends JFrame {
 	JPanel mainPanel;
-	JButton cookBtn, minerBtn, farmerBtn, priceBtn;
+	JButton cookBtn, minerBtn, farmerBtn, fisherBtn, priceBtn;
 	GridBagConstraints gbc;
 	
 	mainWindow() {
@@ -31,12 +33,18 @@ public class mainWindow extends JFrame {
         gbc.weighty = 1.0;
 
         setTitle("란도의 기린 계산기");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+//		setLocationRelativeTo(null);
+		setLocation(500, 300);
+		setResizable(false);
+		setSize(500, 200);
 		
 		mainPanel = new JPanel();		
 		mainPanel.setLayout(new GridBagLayout());
-		mainPanel.setSize(400, 200);
+		mainPanel.setSize(500, 200);
 		
-		cookBtn = makeBtn("요리", 180, 150);
+		cookBtn = makeBtn("요리 시세", 180, 150);
+		cookBtn.setFont(new Font(SystemManager.ttf, Font.PLAIN, 18));
 		cookBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -45,25 +53,39 @@ public class mainWindow extends JFrame {
 			}
 		});
 		
-		minerBtn = makeBtn("광부", 180, 150);
-//		minerBtn.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
+		minerBtn = makeBtn("광부 무역", 180, 150);
+		minerBtn.setFont(new Font(SystemManager.ttf, Font.PLAIN, 18));
+		minerBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 //				new minerWindow();
 //				dispose();
-//			}
-//		});
+				JOptionPane.showMessageDialog(null, "아직 미구현입니다.");
+			}
+		});
 		
-		farmerBtn = makeBtn("무역", 180, 150);
-//		farmerBtn.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				new farmerWindow();
-//				dispose();
-//			}
-//		});
+		farmerBtn = makeBtn("농부 무역", 180, 150);
+		farmerBtn.setFont(new Font(SystemManager.ttf, Font.PLAIN, 18));
+		farmerBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new farmerWindow();
+				dispose();
+			}
+		});
+		
+		fisherBtn = makeBtn("어부 무역", 180, 150);
+		fisherBtn.setFont(new Font(SystemManager.ttf, Font.PLAIN, 18));
+		fisherBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new fisherWindow();
+				dispose();
+			}
+		});
 		
 		priceBtn = makeBtn("아이템 시세", 180, 150);
+		priceBtn.setFont(new Font(SystemManager.ttf, Font.PLAIN, 18));
 		priceBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -79,14 +101,10 @@ public class mainWindow extends JFrame {
 		InsertComponent(mainPanel, cookBtn, 0, 0, 1, 1);
 		InsertComponent(mainPanel, minerBtn, 1, 0, 1, 1);
 		InsertComponent(mainPanel, farmerBtn, 2, 0, 1, 1);
-		InsertComponent(mainPanel, priceBtn, 0, 1, 3, 1);
+		InsertComponent(mainPanel, fisherBtn, 3, 0, 1, 1);
+		InsertComponent(mainPanel, priceBtn, 0, 1, 4, 1);
 		add(mainPanel);
 		
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-//		setLocationRelativeTo(null);
-		setLocation(200, 200);
-		setResizable(false);
-		setSize(400, 200);
 		setVisible(true);
 	}
 	

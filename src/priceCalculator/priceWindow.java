@@ -2,6 +2,7 @@ package priceCalculator;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -27,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -39,7 +41,7 @@ public class priceWindow extends JFrame {
 	JFrame frame;
 	JPanel mainPanel;
 	JPanel listPanel, bottomPanel;
-	JLabel subLabel;
+	JLabel subLabel, cropsLabel, pCropsLabel, fishLabel, pFishLabel, woodLabel, nailLabel, lastSaveLabel;
 	JButton saveBtn, save_exitBtn, exitBtn; 
 	JScrollPane scrollPane;
 	GridBagConstraints gbc;
@@ -60,6 +62,14 @@ public class priceWindow extends JFrame {
 	HashMap<String, JTextField> pFishMap = new HashMap<>();
 	HashMap<String, Double> pFishPrice = infoList.getpFishPrice();
 	
+	// 합판 배열
+	HashMap<String, JTextField> woodMap = new HashMap<>();
+	HashMap<String, Double> woodPrice = infoList.getWoodPrice();
+	
+	// 못 배열
+	HashMap<String, JTextField> nailMap = new HashMap<>();
+	HashMap<String, Double> nailPrice = infoList.getNailPrice();
+	
 	private Point initialClick;
 	
 	LineBorder lb = new LineBorder(Color.black, 1, true);
@@ -68,24 +78,16 @@ public class priceWindow extends JFrame {
 	String[] pCrops = infoList.getpCrops();
 	String[] fish = infoList.getFish();
 	String[] pFish = infoList.getpFish();
+	String[] wood = infoList.getWood();
+	String[] nail = infoList.getNail();
 	
 	public priceWindow() {
 		frame = this;
-//		mainPanel = new GradientPanel(Color.decode("#8CC3FF"), Color.decode("#B0CEE5"));;
-		mainPanel = new JPanel();
-		subLabel = new JLabel();
-		listPanel = new JPanel();
-		bottomPanel = new JPanel();
-		
-		saveBtn = new JButton();
-		exitBtn = new JButton();
-		save_exitBtn = new JButton();
-		
 		frame.setUndecorated(true);
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		frame.setLocation(100, 100);
+		frame.setLocation(0, 0);
 		frame.setResizable(false);		
-		frame.setSize(800, 800);
+		frame.setSize(1500, 800);
 		// JFrame의 위치를 변경하기 위한 MouseListener
         frame.addMouseListener(new MouseAdapter() {
             @Override
@@ -113,43 +115,94 @@ public class priceWindow extends JFrame {
 		gbc.weighty = 1.0;
 		
 		// 메인 패널
+		mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout(0, 0));
 		mainPanel.setBorder(lb);
-		mainPanel.setPreferredSize(new Dimension(800, 800));
+		mainPanel.setPreferredSize(new Dimension(1500, 800));
 		
 		// 부가 설명
+		subLabel = new JLabel();
 		subLabel.setText("TAB키를 사용하여 오른쪽 칸으로 넘어갈 수 있습니다.");
 		subLabel.setOpaque(false);
 		subLabel.setHorizontalAlignment(JLabel.CENTER);
 		subLabel.setVerticalAlignment(JLabel.CENTER);
 		subLabel.setFont(SystemManager.normalTTF);
-		subLabel.setPreferredSize(new Dimension(800, 100));
+		subLabel.setPreferredSize(new Dimension(1400, 100));
 
 		// 리스트 패널
+		listPanel = new JPanel();
 		listPanel.setLayout(new GridBagLayout());
-		listPanel.setOpaque(false);
 //		listPanel.setBorder(new MatteBorder(3, 0, 0, 0, Color.GREEN));
-		listPanel.setPreferredSize(new Dimension(800, 650));
+		listPanel.setPreferredSize(new Dimension(1480, 800));
 		// 스크롤 패널
-//		scrollPane = new JScrollPane(listPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//		scrollPane.setBorder(new EmptyBorder(0,	 0, 0, 0));
-//		scrollPane.setBounds(0, 100, 800, 650);
+		scrollPane = new JScrollPane(listPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(7);
+		scrollPane.setPreferredSize(new Dimension(1500, 650));
 		
 		// 리스트 요소 추가
-		// 일반 농작물
-		makePriceList(infoList.getCrops(), cropsMap, 0);
-		// 숙련도 농작물
-		makePriceList(infoList.getpCrops(), pCropsMap,  1);
-		// 일반 물고기
-		makePriceList(infoList.getFish(), fishMap, 3);
-		// 숙련도 물고기
-		makePriceList(infoList.getpFish(), pFishMap, 5);
+		cropsLabel = new JLabel();
+		cropsLabel.setText("일반 농작물");
+		cropsLabel.setOpaque(true);
+		cropsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		cropsLabel.setVerticalAlignment(SwingConstants.CENTER);
+		cropsLabel.setFont(SystemManager.normalTTF);
 		
-		bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 1, 1));
-		bottomPanel.setOpaque(false);
+		pCropsLabel = new JLabel();
+		pCropsLabel.setText("숙련도 농작물");
+		pCropsLabel.setOpaque(true);
+		pCropsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		pCropsLabel.setVerticalAlignment(SwingConstants.CENTER);
+		pCropsLabel.setFont(SystemManager.normalTTF);
+		
+		fishLabel = new JLabel();
+		fishLabel.setText("일반 물고기");
+		fishLabel.setOpaque(true);
+		fishLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		fishLabel.setVerticalAlignment(SwingConstants.CENTER);
+		fishLabel.setFont(SystemManager.normalTTF);
+		
+		pFishLabel = new JLabel();
+		pFishLabel.setText("숙련도 물고기");
+		pFishLabel.setOpaque(true);
+		pFishLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		pFishLabel.setVerticalAlignment(SwingConstants.CENTER);
+		pFishLabel.setFont(SystemManager.normalTTF);
+		
+		woodLabel = new JLabel();
+		woodLabel.setText("합판");
+		woodLabel.setOpaque(true);
+		woodLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		woodLabel.setVerticalAlignment(SwingConstants.CENTER);
+		woodLabel.setFont(SystemManager.normalTTF);
+		
+		nailLabel = new JLabel();
+		nailLabel.setText("못");
+		nailLabel.setOpaque(true);
+		nailLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		nailLabel.setVerticalAlignment(SwingConstants.CENTER);
+		nailLabel.setFont(SystemManager.normalTTF);
+		
+		makePriceList(infoList.getCrops(), cropsMap, 0);				// 일반 농작물
+		makePriceList(infoList.getpCrops(), pCropsMap,  1);				// 숙련도 농작물
+		makePriceList(infoList.getFish(), fishMap, 3);					// 일반 물고기
+		makePriceList(infoList.getpFish(), pFishMap, 5);				// 숙련도 물고기
+		makePriceList(infoList.getWood(), woodMap, 6);					// 합판
+		makePriceList(infoList.getNail(), nailMap, 7);					// 못
+		
+		bottomPanel = new JPanel();
+		bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 1));
 		bottomPanel.setBorder(new EmptyBorder(1, 1, 1, 1));
-		bottomPanel.setPreferredSize(new Dimension(800, 30));
+		bottomPanel.setPreferredSize(new Dimension(1500, 30));
 		
+		lastSaveLabel = new JLabel();
+		lastSaveLabel.setText("마지막 최신화: " + infoList.getLastSave());
+		lastSaveLabel.setOpaque(false);
+		lastSaveLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lastSaveLabel.setVerticalAlignment(SwingConstants.CENTER);
+		lastSaveLabel.setFont(SystemManager.normalTTF);
+		lastSaveLabel.setPreferredSize(new Dimension(800, 30));
+		
+		saveBtn = new JButton();
 		saveBtn.setText("저장");
 		saveBtn.setOpaque(false);
 		saveBtn.setFont(SystemManager.smallTTF);
@@ -163,6 +216,7 @@ public class priceWindow extends JFrame {
 		});
 		saveBtn.setPreferredSize(new Dimension(100, 30));
 		
+		exitBtn = new JButton();
 		exitBtn.setText("저장하지 않고 닫기");
 		exitBtn.setOpaque(false);
 		exitBtn.setBorder(lb);
@@ -181,6 +235,7 @@ public class priceWindow extends JFrame {
 		});
 		exitBtn.setPreferredSize(new Dimension(160, 30));
 		
+		save_exitBtn = new JButton();
 		save_exitBtn.setText("저장하고 닫기");
 		save_exitBtn.setOpaque(false);
 		save_exitBtn.setBorder(lb);
@@ -198,13 +253,21 @@ public class priceWindow extends JFrame {
 		});
 		save_exitBtn.setPreferredSize(new Dimension(150, 30));
 		
+		InsertComponent(listPanel, cropsLabel, 0, 0, 1, 1);
+		InsertComponent(listPanel, pCropsLabel, 0, 1, 1, 2);
+		InsertComponent(listPanel, fishLabel, 0, 3, 1, 2);
+		InsertComponent(listPanel, pFishLabel, 0, 5, 1, 1);
+		InsertComponent(listPanel, woodLabel, 0, 6, 1, 1);
+		InsertComponent(listPanel, nailLabel, 0, 7, 1, 1);
+		
+		bottomPanel.add(lastSaveLabel);
 		bottomPanel.add(saveBtn);
 		bottomPanel.add(exitBtn);
 		bottomPanel.add(save_exitBtn);
 		
 		mainPanel.add(subLabel, BorderLayout.NORTH);
-		mainPanel.add(listPanel, BorderLayout.CENTER);
-//		mainPanel.add(scrollPane);
+//		mainPanel.add(listPanel, BorderLayout.CENTER);
+		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 		add(mainPanel);
 		
@@ -228,6 +291,12 @@ public class priceWindow extends JFrame {
 		for(int i = 0; i < pFish.length; i++)
 			if(pFishMap.get(pFish[i]).getText().equals(""))
 				errorCode += "[숙련도 물고기] " + pFish[i] + "가(이) 비었습니다!\n";
+		for(int i = 0; i < wood.length; i++)
+			if(woodMap.get(wood[i]).getText().equals(""))
+				errorCode += "[합판] " + wood[i] + "가(이) 비었습니다!\n";
+		for(int i = 0; i < nail.length; i++)
+			if(nailMap.get(nail[i]).getText().equals(""))
+				errorCode += "[못] " + nail[i] + "가(이) 비었습니다!\n";
 		
 		if(errorCode.equals(""))
 			return false;
@@ -247,6 +316,18 @@ public class priceWindow extends JFrame {
 			fishPrice.put(fish[i], Double.parseDouble(fishMap.get(fish[i]).getText()));
 		for(int i = 0; i < pFish.length; i++) 
 			pFishPrice.put(pFish[i], Double.parseDouble(pFishMap.get(pFish[i]).getText()));
+		for(int i = 0; i < wood.length; i++) 
+			woodPrice.put(wood[i], Double.parseDouble(woodMap.get(wood[i]).getText()));
+		for(int i = 0; i < nail.length; i++) 
+			nailPrice.put(nail[i], Double.parseDouble(nailMap.get(nail[i]).getText()));
+		
+		infoList.setCropsPrice(cropsPrice);
+		infoList.setpCropsPrice(pCropsPrice);
+		infoList.setFishPrice(fishPrice);
+		infoList.setpFishPrice(pFishPrice);
+		infoList.setWoodMap(woodPrice);
+		infoList.setNailMap(nailPrice);
+		infoList.savePriceInfo();
 		
 		JOptionPane.showMessageDialog(null, "저장 되었습니다.");
 	}
@@ -264,6 +345,12 @@ public class priceWindow extends JFrame {
 		
 		for(int i = 0; i < pFish.length; i++) 
 			pFishMap.get(pFish[i]).setText("" + pFishPrice.get(pFish[i]));
+		
+		for(int i = 0; i < wood.length; i++) 
+			woodMap.get(wood[i]).setText("" + woodPrice.get(wood[i]));
+		
+		for(int i = 0; i < nail.length; i++) 
+			nailMap.get(nail[i]).setText("" + nailPrice.get(nail[i]));
 	}
 	
 	public void makePriceList(String[] name, HashMap<String, JTextField> map, int col) {
@@ -315,12 +402,12 @@ public class priceWindow extends JFrame {
 			
 			panel.add(label, BorderLayout.NORTH);
 			panel.add(textField, BorderLayout.CENTER);
-			InsertComponent(listPanel, panel, (i % 10), (col + (i / 10)), 1, 1);
+			InsertComponent(listPanel, panel, 1 + (i % 10), (col + (i / 10)), 1, 1);
 		}
 	}
 	
 	
-	public void InsertComponent(JPanel panel, JPanel c, int x, int y, int w, int h) {
+	public void InsertComponent(JPanel panel, Component c, int x, int y, int w, int h) {
 		gbc.gridx = x;
 		gbc.gridy = y;
 		gbc.gridwidth = w;

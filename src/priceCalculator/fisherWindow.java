@@ -17,6 +17,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.HashMap;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -25,11 +26,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
 
-public class farmerWindow extends JFrame {
+public class fisherWindow extends JFrame {
 	JFrame frame = this;
 	JPanel mainPanel, pricePanel, labelPanel, listPanel, bottomPanel;
 	JLabel priceLabel, firstLabel, secondLabel, thirdLabel, priceProfitLabel, subLabel_1, subLabel_2;
 	JTextArea priceTextArea;
+	JCheckBox sharkCBox, lobCBox;
 	JButton applyBtn, exitBtn;
 	
 	JScrollPane priceScrollPane, listScrollPane;
@@ -40,23 +42,23 @@ public class farmerWindow extends JFrame {
 	// 시세 리스트
 	HashMap<String, Double> priceMap = new HashMap<>();
 	
-	// 일반 농작물, 숙련도 농작물, 합판, 못 시세를 InfoList에서 가져오기
-	String[] cropsName = infoList.getCrops();
-	String[] pCropsName = infoList.getpCrops();
-	HashMap<String, Double> cropsPriceMap = infoList.getCropsPrice();
-	HashMap<String, Double> pCropsPriceMap = infoList.getpCropsPrice();
+	// 일반 물고기, 숙련도 물고기 시세, 합판, 못 시세를 InfoList에서 가져오기
+	String[] fishName = infoList.getFish();
+	String[] pFishName = infoList.getpFish();
+	HashMap<String, Double> fishPriceMap = infoList.getFishPrice();
+	HashMap<String, Double> pFishPriceMap = infoList.getpFishPrice();
 	HashMap<String, Double> woodPriceMap = infoList.getWoodPrice();
 	HashMap<String, Double> nailPriceMap = infoList.getNailPrice();
 	
-	// 각 농작물의 시세 수익, 1등급, 2등급, 3등급 라벨
-	HashMap<String, JLabel> cropsListMap = new HashMap<>();
-	HashMap<String, JLabel> pCropsListMap = new HashMap<>();
+	// 각 물고기의 시세 수익, 1등급, 2등급, 3등급 라벨
+	HashMap<String, JLabel> fishListMap = new HashMap<>();
+	HashMap<String, JLabel> pFishListMap = new HashMap<>();
 	
 	GridBagConstraints gbc;
 	
 	private Point initialClick;
 	
-	public farmerWindow() {
+	public fisherWindow() {
 		gbc = new GridBagConstraints();
 	    gbc.fill = GridBagConstraints.BOTH;
 	    gbc.insets= new Insets(1, 1, 0, 0);
@@ -153,7 +155,7 @@ public class farmerWindow extends JFrame {
 		thirdLabel.setBounds(630, 0, 160, 80);
 		
 		subLabel_1 = new JLabel();
-		subLabel_1.setText("(농작물 x 64)");
+		subLabel_1.setText("(물고기 x 16)");
 		subLabel_1.setHorizontalAlignment(JLabel.CENTER);
 		subLabel_1.setVerticalAlignment(JLabel.CENTER);
 		subLabel_1.setFont(SystemManager.smallTTF);
@@ -161,7 +163,7 @@ public class farmerWindow extends JFrame {
 		subLabel_1.setBounds(180, 45, 160, 40);
 		
 		subLabel_2 = new JLabel();
-		subLabel_2.setText("(변동가 - (농작물 x 64 + 합판 x 3 + 못 x 2)");
+		subLabel_2.setText("(변동가 - (물고기 x 16 + 합판 x 3 + 못 x 2)");
 		subLabel_2.setHorizontalAlignment(JLabel.CENTER);
 		subLabel_2.setVerticalAlignment(JLabel.CENTER);
 		subLabel_2.setFont(SystemManager.smallTTF);
@@ -183,14 +185,14 @@ public class farmerWindow extends JFrame {
 		listScrollPane.getVerticalScrollBar().setUnitIncrement(7);
 		listScrollPane.setPreferredSize(new Dimension(800, 510));
 		
-		// 일반 농작물, 숙련도 농작물 리스트 추가
+		// 일반 물고기, 숙련도 물고기 리스트 추가
 		int col = 1;
-		for(int i = 0; i < cropsName.length; i++) {
-			JLabel cropsLabel = new JLabel();
-			cropsLabel.setText(cropsName[i]);
-			cropsLabel.setHorizontalAlignment(JLabel.CENTER);
-			cropsLabel.setVerticalAlignment(JLabel.CENTER);
-			cropsLabel.setFont(SystemManager.normalTTF);
+		for(int i = 0; i < fishName.length; i++) {
+			JLabel fishLabel = new JLabel();
+			fishLabel.setText(fishName[i]);
+			fishLabel.setHorizontalAlignment(JLabel.CENTER);
+			fishLabel.setVerticalAlignment(JLabel.CENTER);
+			fishLabel.setFont(SystemManager.normalTTF);
 			
 			JLabel priceLabel = new JLabel();
 			priceLabel.setText("0.0");
@@ -222,25 +224,25 @@ public class farmerWindow extends JFrame {
 			thirdLabel.setForeground(Color.RED);
 			thirdLabel.setOpaque(true);
 			
-			InsertComponent(gbc, listPanel, cropsLabel, 0, col, 1, 1);
+			InsertComponent(gbc, listPanel, fishLabel, 0, col, 1, 1);
 			InsertComponent(gbc, listPanel, priceLabel, 1, col, 1, 1);
 			InsertComponent(gbc, listPanel, firstLabel, 2, col, 1, 1);
 			InsertComponent(gbc, listPanel, secondLabel, 3, col, 1, 1);
 			InsertComponent(gbc, listPanel, thirdLabel, 4, col, 1, 1);
 			
-			cropsListMap.put(cropsName[i] + "_시세가", priceLabel);
-			cropsListMap.put(cropsName[i] + "_1", firstLabel);
-			cropsListMap.put(cropsName[i] + "_2", secondLabel);
-			cropsListMap.put(cropsName[i] + "_3", thirdLabel);
+			fishListMap.put(fishName[i] + "_시세가", priceLabel);
+			fishListMap.put(fishName[i] + "_1", firstLabel);
+			fishListMap.put(fishName[i] + "_2", secondLabel);
+			fishListMap.put(fishName[i] + "_3", thirdLabel);
 			col++;
 		}
 		
-		for(int i = 0; i < pCropsName.length; i++) {
-			JLabel pCropsLabel = new JLabel();
-			pCropsLabel.setText(pCropsName[i]);
-			pCropsLabel.setHorizontalAlignment(JLabel.CENTER);
-			pCropsLabel.setVerticalAlignment(JLabel.CENTER);
-			pCropsLabel.setFont(SystemManager.normalTTF);
+		for(int i = 0; i < pFishName.length; i++) {
+			JLabel pFishLabel = new JLabel();
+			pFishLabel.setText(pFishName[i]);
+			pFishLabel.setHorizontalAlignment(JLabel.CENTER);
+			pFishLabel.setVerticalAlignment(JLabel.CENTER);
+			pFishLabel.setFont(SystemManager.normalTTF);
 			
 			JLabel priceLabel = new JLabel();
 			priceLabel.setText("0.0");
@@ -272,16 +274,16 @@ public class farmerWindow extends JFrame {
 			thirdLabel.setForeground(Color.RED);
 			thirdLabel.setOpaque(true);
 			
-			InsertComponent(gbc, listPanel, pCropsLabel, 0, col, 1, 1);
+			InsertComponent(gbc, listPanel, pFishLabel, 0, col, 1, 1);
 			InsertComponent(gbc, listPanel, priceLabel, 1, col, 1, 1);
 			InsertComponent(gbc, listPanel, firstLabel, 2, col, 1, 1);
 			InsertComponent(gbc, listPanel, secondLabel, 3, col, 1, 1);
 			InsertComponent(gbc, listPanel, thirdLabel, 4, col, 1, 1);
 			
-			pCropsListMap.put(pCropsName[i] + "_시세가", priceLabel);
-			pCropsListMap.put(pCropsName[i] + "_1", firstLabel);
-			pCropsListMap.put(pCropsName[i] + "_2", secondLabel);
-			pCropsListMap.put(pCropsName[i] + "_3", thirdLabel);
+			pFishListMap.put(pFishName[i] + "_시세가", priceLabel);
+			pFishListMap.put(pFishName[i] + "_1", firstLabel);
+			pFishListMap.put(pFishName[i] + "_2", secondLabel);
+			pFishListMap.put(pFishName[i] + "_3", thirdLabel);
 			col++;
 		}
 		// 여백
@@ -295,6 +297,12 @@ public class farmerWindow extends JFrame {
 		bottomPanel = new JPanel();
 		bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 1, 1));
 		bottomPanel.setPreferredSize(new Dimension(800, 40));
+		
+		sharkCBox = new JCheckBox("철갑상어", true);
+		sharkCBox.setPreferredSize(new Dimension(160, 38));
+		
+		lobCBox = new JCheckBox("랍스터",true);
+		lobCBox.setPreferredSize(new Dimension(160, 38));
 		
 		applyBtn = new JButton();
 		applyBtn.setText("적용");
@@ -335,6 +343,8 @@ public class farmerWindow extends JFrame {
 		labelPanel.add(subLabel_1);
 		labelPanel.add(subLabel_2);
 		
+		bottomPanel.add(sharkCBox);
+		bottomPanel.add(lobCBox);
 		bottomPanel.add(applyBtn);
 		bottomPanel.add(exitBtn);
 
@@ -361,20 +371,20 @@ public class farmerWindow extends JFrame {
 		String maxKey = "";
 		Double maxValue = 0.0;
 		
-		// 일반 농작물
-		for(int i = 0; i < cropsName.length; i++) {
+		// 일반 물고기
+		for(int i = 0; i < fishName.length; i++) {
 			// 컴포넌트 불러오기
-			JLabel priceLb = cropsListMap.get(cropsName[i] + "_시세가");
-			JLabel cropsLb_1 = cropsListMap.get(cropsName[i] + "_1");
-			JLabel cropsLb_2 = cropsListMap.get(cropsName[i] + "_2");
-			JLabel cropsLb_3 = cropsListMap.get(cropsName[i] + "_3");
+			JLabel priceLb = fishListMap.get(fishName[i] + "_시세가");
+			JLabel fishLb_1 = fishListMap.get(fishName[i] + "_1");
+			JLabel fishLb_2 = fishListMap.get(fishName[i] + "_2");
+			JLabel fishLb_3 = fishListMap.get(fishName[i] + "_3");
 
 			// 값 불러오기
-			Double hourPrice_1 = priceMap.get(cropsName[i] + "_1");
-			Double hourPrice_2 = priceMap.get(cropsName[i] + "_2");
-			Double hourPrice_3 = priceMap.get(cropsName[i] + "_3");
+			Double hourPrice_1 = priceMap.get(fishName[i] + "_1");
+			Double hourPrice_2 = priceMap.get(fishName[i] + "_2");
+			Double hourPrice_3 = priceMap.get(fishName[i] + "_3");
 		
-			Double cropsPrice = cropsPriceMap.get(cropsName[i]);
+			Double fishPrice = fishPriceMap.get(fishName[i]);
 			Double woodPrice_1 = woodPriceMap.get("매끈한 합판");
 			Double woodPrice_2 = woodPriceMap.get("다듬어진 합판");
 			Double woodPrice_3 = woodPriceMap.get("거친 합판");
@@ -383,74 +393,77 @@ public class farmerWindow extends JFrame {
 			Double nailPrice_3 = nailPriceMap.get("녹슨 못");
 			
 			// 컴포넌트 배경 색상 초기화
-			cropsLb_1.setBackground(null);
-			cropsLb_2.setBackground(null);
-			cropsLb_3.setBackground(null);
+			fishLb_1.setBackground(null);
+			fishLb_2.setBackground(null);
+			fishLb_3.setBackground(null);
 			
-			// 1등급	(변동가 - (농작물 * 64 + 1등급 합판 * 3 + 1등급 못 * 2)
-			String cal_1 = String.format("%.2f" , hourPrice_1 - (cropsPrice * 64 + woodPrice_1 * 3 + nailPrice_1 * 2));
-			// 2등급	(변동가 - (농작물 * 64 + 2등급 합판 * 3 + 2등급 못 * 2)
-			String cal_2 = String.format("%.2f" , hourPrice_2 - (cropsPrice * 64 + woodPrice_2 * 3 + nailPrice_2 * 2));
-			// 3등급	(변동가 - (농작물 * 64 + 3등급 합판 * 3 + 3등급 못 * 2)
-			String cal_3 = String.format("%.2f" , hourPrice_3 - (cropsPrice * 64 + woodPrice_3 * 3 + nailPrice_3 * 2));
+			// 1등급	(변동가 - (물고기 * 16 + 1등급 합판 * 3 + 1등급 못 * 2)
+			String cal_1 = String.format("%.2f" , hourPrice_1 - (fishPrice * 16 + woodPrice_1 * 3 + nailPrice_1 * 2));
+			// 2등급	(변동가 - (물고기 * 16 + 2등급 합판 * 3 + 2등급 못 * 2)
+			String cal_2 = String.format("%.2f" , hourPrice_2 - (fishPrice * 16 + woodPrice_2 * 3 + nailPrice_2 * 2));
+			// 3등급	(변동가 - (물고기 * 16 + 3등급 합판 * 3 + 3등급 못 * 2)
+			String cal_3 = String.format("%.2f" , hourPrice_3 - (fishPrice * 16 + woodPrice_3 * 3 + nailPrice_3 * 2));
 			
-			// 시세가	(농작물 * 64)
-			priceLb.setText("" + (cropsPrice * 64));
+			// 시세가	(물고기 * 16)
+			priceLb.setText("" + (fishPrice * 16));
 			
 			if(Double.parseDouble(cal_1) > 0) {
-				cropsLb_1.setForeground(Color.RED);
-				cropsLb_1.setText("+" + cal_1);
+				fishLb_1.setForeground(Color.RED);
+				fishLb_1.setText("+" + cal_1);
 			} else {
-				cropsLb_1.setForeground(Color.BLUE);
-				cropsLb_1.setText(cal_1);
+				fishLb_1.setForeground(Color.BLUE);
+				fishLb_1.setText(cal_1);
 			}
 			
 			if(Double.parseDouble(cal_2) > 0) {
-				cropsLb_2.setForeground(Color.RED);
-				cropsLb_2.setText("+" + cal_2);
+				fishLb_2.setForeground(Color.RED);
+				fishLb_2.setText("+" + cal_2);
 			} else {
-				cropsLb_2.setForeground(Color.BLUE);
-				cropsLb_2.setText(cal_2);
+				fishLb_2.setForeground(Color.BLUE);
+				fishLb_2.setText(cal_2);
 			}
 			
 			if(Double.parseDouble(cal_3) > 0) {
-				cropsLb_3.setForeground(Color.RED);
-				cropsLb_3.setText("+" + cal_3);
+				fishLb_3.setForeground(Color.RED);
+				fishLb_3.setText("+" + cal_3);
 			} else {
-				cropsLb_3.setForeground(Color.BLUE);
-				cropsLb_3.setText(cal_3);
+				fishLb_3.setForeground(Color.BLUE);
+				fishLb_3.setText(cal_3);
 			}
 			
-			if(maxValue < Double.parseDouble(cal_1)) {
-				maxKey = cropsName[i] + "_1";
-				maxValue = Double.parseDouble(cal_1);
+			if(!fishName[i].equals("철갑상어")) {
+				if(maxValue < Double.parseDouble(cal_1)) {
+					maxKey = fishName[i] + "_1";
+					maxValue = Double.parseDouble(cal_1);
+				}
+				
+				if(maxValue < Double.parseDouble(cal_2)) {
+					maxKey = fishName[i] + "_2";
+					maxValue = Double.parseDouble(cal_2);
+				}
+				
+				if(maxValue < Double.parseDouble(cal_3)) {
+					maxKey = fishName[i] + "_3";
+					maxValue = Double.parseDouble(cal_3);
+				}
 			}
 			
-			if(maxValue < Double.parseDouble(cal_2)) {
-				maxKey = cropsName[i] + "_2";
-				maxValue = Double.parseDouble(cal_2);
-			}
-			
-			if(maxValue < Double.parseDouble(cal_3)) {
-				maxKey = cropsName[i] + "_3";
-				maxValue = Double.parseDouble(cal_3);
-			}
 		}
 		
-		// 숙련도 농작물
-		for(int i = 0; i < pCropsName.length; i++) {
+		// 숙련도 물고기
+		for(int i = 0; i < pFishName.length; i++) {
 			// 컴포넌트 불러오기
-			JLabel priceLb = pCropsListMap.get(pCropsName[i] + "_시세가");
-			JLabel cropsLb_1 = pCropsListMap.get(pCropsName[i] + "_1");
-			JLabel cropsLb_2 = pCropsListMap.get(pCropsName[i] + "_2");
-			JLabel cropsLb_3 = pCropsListMap.get(pCropsName[i] + "_3");
+			JLabel priceLb = pFishListMap.get(pFishName[i] + "_시세가");
+			JLabel fishLb_1 = pFishListMap.get(pFishName[i] + "_1");
+			JLabel fishLb_2 = pFishListMap.get(pFishName[i] + "_2");
+			JLabel fishLb_3 = pFishListMap.get(pFishName[i] + "_3");
 
 			// 값 불러오기
-			Double hourPrice_1 = priceMap.get(pCropsName[i] + "_1");
-			Double hourPrice_2 = priceMap.get(pCropsName[i] + "_2");
-			Double hourPrice_3 = priceMap.get(pCropsName[i] + "_3");
+			Double hourPrice_1 = priceMap.get(pFishName[i] + "_1");
+			Double hourPrice_2 = priceMap.get(pFishName[i] + "_2");
+			Double hourPrice_3 = priceMap.get(pFishName[i] + "_3");
 		
-			Double cropsPrice = pCropsPriceMap.get(pCropsName[i]);
+			Double fishPrice = pFishPriceMap.get(pFishName[i]);
 			Double woodPrice_1 = woodPriceMap.get("매끈한 합판");
 			Double woodPrice_2 = woodPriceMap.get("다듬어진 합판");
 			Double woodPrice_3 = woodPriceMap.get("거친 합판");
@@ -459,68 +472,68 @@ public class farmerWindow extends JFrame {
 			Double nailPrice_3 = nailPriceMap.get("녹슨 못");
 			
 			// 컴포넌트 배경 색상 초기화
-			cropsLb_1.setBackground(null);
-			cropsLb_2.setBackground(null);
-			cropsLb_3.setBackground(null);
-
-			// 1등급	(변동가 - (농작물 * 64 + 1등급 합판 * 3 + 1등급 못 * 2)
-			String cal_1 = String.format("%.2f" , hourPrice_1 - (cropsPrice * 64 + woodPrice_1 * 3 + nailPrice_1 * 2));
-			// 2등급	(변동가 - (농작물 * 64 + 2등급 합판 * 3 + 2등급 못 * 2)
-			String cal_2 = String.format("%.2f" , hourPrice_2 - (cropsPrice * 64 + woodPrice_2 * 3 + nailPrice_2 * 2));
-			// 3등급	(변동가 - (농작물 * 64 + 3등급 합판 * 3 + 3등급 못 * 2)
-			String cal_3 = String.format("%.2f" , hourPrice_3 - (cropsPrice * 64 + woodPrice_3 * 3 + nailPrice_3 * 2));
+			fishLb_1.setBackground(null);
+			fishLb_2.setBackground(null);
+			fishLb_3.setBackground(null);
 			
-			// 시세가	(농작물 * 64)
-			priceLb.setText("" + (cropsPrice * 64));
+			// 1등급	(변동가 - (물고기 * 16 + 1등급 합판 * 3 + 1등급 못 * 2)
+			String cal_1 = String.format("%.2f" , hourPrice_1 - (fishPrice * 16 + woodPrice_1 * 3 + nailPrice_1 * 2));
+			// 2등급	(변동가 - (물고기 * 16 + 2등급 합판 * 3 + 2등급 못 * 2)
+			String cal_2 = String.format("%.2f" , hourPrice_2 - (fishPrice * 16 + woodPrice_2 * 3 + nailPrice_2 * 2));
+			// 3등급	(변동가 - (물고기 * 16 + 3등급 합판 * 3 + 3등급 못 * 2)
+			String cal_3 = String.format("%.2f" , hourPrice_3 - (fishPrice * 16 + woodPrice_3 * 3 + nailPrice_3 * 2));
+			
+			// 시세가	(물고기 * 16)
+			priceLb.setText("" + (fishPrice * 16));
 						
 			if(Double.parseDouble(cal_1) > 0) {
-				cropsLb_1.setForeground(Color.RED);
-				cropsLb_1.setText("+" + cal_1);
+				fishLb_1.setForeground(Color.RED);
+				fishLb_1.setText("+" + cal_1);
 			} else {
-				cropsLb_1.setForeground(Color.BLUE);
-				cropsLb_1.setText(cal_1);
+				fishLb_1.setForeground(Color.BLUE);
+				fishLb_1.setText(cal_1);
 			}
 			
 			if(Double.parseDouble(cal_2) > 0) {
-				cropsLb_2.setForeground(Color.RED);
-				cropsLb_2.setText("+" + cal_2);
+				fishLb_2.setForeground(Color.RED);
+				fishLb_2.setText("+" + cal_2);
 			} else {
-				cropsLb_2.setForeground(Color.BLUE);
-				cropsLb_2.setText(cal_2);
+				fishLb_2.setForeground(Color.BLUE);
+				fishLb_2.setText(cal_2);
 			}
 			
 			if(Double.parseDouble(cal_3) > 0) {
-				cropsLb_3.setForeground(Color.RED);
-				cropsLb_3.setText("+" + cal_3);
+				fishLb_3.setForeground(Color.RED);
+				fishLb_3.setText("+" + cal_3);
 			} else {
-				cropsLb_3.setForeground(Color.BLUE);
-				cropsLb_3.setText(cal_3);
+				fishLb_3.setForeground(Color.BLUE);
+				fishLb_3.setText(cal_3);
 			}
-			
+
 			if(maxValue < Double.parseDouble(cal_1)) {
 				target = "숙련도";
-				maxKey = pCropsName[i] + "_1";
+				maxKey = pFishName[i] + "_1";
 				maxValue = Double.parseDouble(cal_1);
 			}
-			
+				
 			if(maxValue < Double.parseDouble(cal_2)) {
 				target = "숙련도";
-				maxKey = pCropsName[i] + "_2";
+				maxKey = pFishName[i] + "_2";
 				maxValue = Double.parseDouble(cal_2);
 			}
-			
+				
 			if(maxValue < Double.parseDouble(cal_3)) {
 				target = "숙련도";
-				maxKey = pCropsName[i] + "_3";
+				maxKey = pFishName[i] + "_3";
 				maxValue = Double.parseDouble(cal_3);
 			}
 		}
 //		System.out.println("Key: " + maxKey + "Value: " + maxValue);
 		if(target.equals("일반"))
-			cropsListMap.get(maxKey).setBackground(Color.decode("#ee90c7"));
-			
+			fishListMap.get(maxKey).setBackground(Color.decode("#ee90c7"));
+				
 		else
-			pCropsListMap.get(maxKey).setBackground(Color.decode("#ee90c7"));
+			pFishListMap.get(maxKey).setBackground(Color.decode("#ee90c7"));
 		JOptionPane.showMessageDialog(null, "적용이 완료되었습니다.");
 	}
 	
@@ -557,6 +570,7 @@ public class farmerWindow extends JFrame {
                 }
             }
         }
+		System.out.println(priceMap);
 	}
 	
 	public void InsertComponent(GridBagConstraints gbc, JPanel panel, Component c, int x, int y, int w, int h) {
